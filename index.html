@@ -1,1 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexGen — Premium Digital Studio</title>
+<meta name="description" content="NexGen is a premium digital studio crafting brands, websites and apps that feel effortless.">
 
+<!-- Bootstrap & Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================
+   1. DESIGN TOKENS
+============================================ */
+:root{
+  --bg:#f5f1ea;
+  --bg-elev:#ffffff;
+  --bg-dark:#141210;
+  --text:#151310;
+  --text-soft:#5a544c;
+  --text-muted:#928b81;
+  --border:rgba(21,19,16,.10);
+  --border-strong:rgba(21,19,16,.18);
+  --card:#ffffff;
+  --shadow:0 2px 6px rgba(21,19,16,.04),0 20px 40px -12px rgba(21,19,16,.08);
+  --shadow-hover:0 4px 12px rgba(21,19,16,.06),0 30px 60px -12px rgba(21,19,16,.14);
+  --gold:#b8894a;
+  --gold-light:#d4a961;
+  --accent:var(--gold);
+  --accent-soft:rgba(184,137,74,.10);
+  --grad:linear-gradient(135deg,#b8894a 0%,#d4a961 50%,#c8543c 100%);
+  --font-serif:'Playfair Display',Georgia,serif;
+  --font-sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --nav-bg:rgba(245,241,234,.80);
+  --r:16px;
+  --r-sm:10px;
+  --r-lg:24px;
+}
+
+[data-theme="dark"]{
+  --bg:#0f0e0c;
+  --bg-elev:#1a1815;
+  --bg-dark:#050505;
+  --text:#f2ede4;
+  --text-soft:#b8b0a2;
+  --text-muted:#7a7367;
+  --border:rgba(242,237,228,.09);
+  --border-strong:rgba(242,237,228,.18);
+  --card:#1a1815;
+  --shadow:0 2px 6px rgba(0,0,0,.4),0 20px 40px -12px rgba(0,0,0,.5);
+  --shadow-hover:0 4px 12px rgba(0,0,0,.5),0 30px 60px -12px rgba(0,0,0,.6);
+  --gold:#d4a961;
+  --gold-light:#e6c187;
+  --accent:var(--gold);
+  --accent-soft:rgba(212,169,97,.14);
+  --nav-bg:rgba(15,14,12,.80);
+}
+
+/* ============================================
+   2. BASE
+============================================ */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:100px;}
+body{
+  font-family:var(--font-sans);
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  transition:background .4s ease,color .4s ease;
+}
+@media (min-width:992px){ body{cursor:none;} }
+
+h1,h2,h3,h4,h5{
+  font-family:var(--font-serif);
+  font-weight:500;
+  letter-spacing:-.02em;
+  line-height:1.15;
+  color:var(--text);
+}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;display:block;}
+::selection{background:var(--gold);color:#fff;}
+
+/* Custom cursor */
+.cursor-dot,.cursor-ring{
+  position:fixed;top:0;left:0;pointer-events:none;z-index:99999;
+  border-radius:50%;transform:translate(-50%,-50%);
+  mix-blend-mode:difference;
+}
+.cursor-dot{width:6px;height:6px;background:#fff;}
+.cursor-ring{
+  width:36px;height:36px;border:1.5px solid #fff;
+  transition:width .25s,height .25s,opacity .25s;
+}
+.cursor-ring.hover{width:64px;height:64px;opacity:.6;}
+@media (max-width:991.98px){ .cursor-dot,.cursor-ring{display:none;} }
+
+/* Grain */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.04;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Scroll progress */
+.scroll-progress{
+  position:fixed;top:0;left:0;height:2px;width:0%;
+  background:var(--grad);z-index:9999;transition:width .08s linear;
+}
+
+/* ============================================
+   REVEAL ANIMATION (FIXED: Default is visible)
+============================================ */
+.reveal{
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  will-change: opacity, transform;
+}
+/* Agar JS load ho jaye toh yeh class add hogi */
+.reveal.in { opacity: 1; transform: translateY(0); }
+/* Agar JS fail ho jaye toh yeh CSS ensure karegi ke content dikhe */
+noscript ~ * .reveal,
+body.no-js .reveal { opacity: 1; transform: none; }
+
+/* Split Text */
+.split-char{
+  display:inline-block;opacity:0;transform:translateY(100%);
+  transition:opacity .8s,transform .8s cubic-bezier(.19,1,.22,1);
+}
+.split-in .split-char{opacity:1;transform:translateY(0);}
+
+/* ============================================
+   3. NAVBAR
+============================================ */
+.nav-wrap{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:20px 0;transition:all .4s ease;
+}
+.nav-wrap.scrolled{
+  padding:12px 0;
+  background:var(--nav-bg);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+}
+.navbar-brand{
+  font-family:var(--font-serif);font-size:1.75rem;font-weight:700;
+  color:var(--text)!important;letter-spacing:-.03em;
+}
+.brand-dot{color:var(--gold);}
+.nav-link{
+  color:var(--text-soft)!important;font-weight:500;font-size:.92rem;
+  margin:0 8px;position:relative;transition:color .25s;
+}
+.nav-link::after{
+  content:'';position:absolute;bottom:2px;left:50%;right:50%;height:1px;
+  background:var(--gold);transition:all .35s ease;
+}
+.nav-link:hover,.nav-link.active{color:var(--text)!important;}
+.nav-link:hover::after,.nav-link.active::after{left:10px;right:10px;}
+
+.theme-btn{
+  width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--border-strong);background:transparent;color:var(--text);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:all .3s;font-size:1.05rem;
+}
+.theme-btn:hover{border-color:var(--gold);color:var(--gold);transform:rotate(20deg);}
+.navbar-toggler{border:none;padding:6px 8px;}
+.navbar-toggler:focus{box-shadow:none;}
+.navbar-toggler i{color:var(--text);font-size:1.7rem;}
+
+.btn-dark{
+  background:var(--text);color:var(--bg);border:none;border-radius:50px;
+  padding:13px 28px;font-weight:600;font-size:.9rem;transition:all .35s;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-dark:hover{background:var(--gold);color:#fff;transform:translateY(-2px);}
+.btn-ghost{
+  background:transparent;color:var(--text);border:1px solid var(--border-strong);
+  border-radius:50px;padding:13px 28px;font-weight:600;font-size:.9rem;
+  transition:all .35s;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px);}
+.btn-gold{
+  background:var(--grad);color:#fff;border:none;border-radius:50px;
+  padding:15px 34px;font-weight:600;font-size:.95rem;transition:all .35s;
+  display:inline-flex;align-items:center;gap:8px;
+  box-shadow:0 10px 30px -10px rgba(184,137,74,.4);position:relative;overflow:hidden;
+}
+.btn-gold:hover{color:#fff;transform:translateY(-3px);box-shadow:0 20px 40px -10px rgba(184,137,74,.5);}
+
+/* ============================================
+   4. SECTION HELPERS
+============================================ */
+.section{padding:130px 0;position:relative;}
+.section-sm{padding:90px 0;}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--font-mono);font-size:.72rem;font-weight:500;
+  color:var(--gold);text-transform:uppercase;letter-spacing:.22em;
+  margin-bottom:24px;
+}
+.eyebrow::before{content:'';width:32px;height:1px;background:var(--gold);}
+.section-title{
+  font-size:clamp(2.2rem,5vw,4.2rem);font-weight:500;
+  letter-spacing:-.03em;margin-bottom:24px;line-height:1.05;
+}
+.section-title .italic{font-style:italic;color:var(--gold);font-weight:400;}
+.section-desc{
+  color:var(--text-soft);font-size:1.08rem;max-width:560px;line-height:1.75;
+}
+.section-desc.mx-auto{margin-left:auto;margin-right:auto;}
+.text-gold{color:var(--gold);}
+
+/* ============================================
+   5. HERO
+============================================ */
+.hero{
+  padding:180px 0 100px;position:relative;overflow:hidden;
+  min-height:100vh;display:flex;align-items:center;
+}
+.hero-meta{
+  display:flex;align-items:center;gap:16px;
+  font-family:var(--font-mono);font-size:.75rem;
+  color:var(--text-muted);text-transform:uppercase;letter-spacing:.18em;
+  margin-bottom:32px;
+}
+.hero-meta .line{width:40px;height:1px;background:var(--text-muted);}
+.hero-meta .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+.hero-title{
+  font-size:clamp(3rem,7.5vw,6.5rem);
+  font-weight:500;line-height:.98;letter-spacing:-.035em;margin-bottom:36px;
+}
+.hero-title .italic{font-style:italic;color:var(--gold);font-weight:400;}
+.hero-title .underline{position:relative;display:inline-block;}
+.hero-title .underline::after{
+  content:'';position:absolute;left:0;bottom:.05em;
+  width:100%;height:.08em;background:var(--gold);opacity:.4;
+}
+.hero-desc{
+  font-size:1.15rem;color:var(--text-soft);max-width:480px;
+  line-height:1.75;margin-bottom:44px;
+}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
+
+.hero-visual{
+  position:relative;
+  border-radius:var(--r-lg);overflow:hidden;
+  box-shadow:var(--shadow-hover);
+  transform-style:preserve-3d;
+  transition:transform .5s ease;
+}
+.hero-visual img{
+  width:100%;height:640px;object-fit:cover;
+  transition:transform 1.2s cubic-bezier(.19,1,.22,1);
+}
+.hero-visual:hover img{transform:scale(1.04);}
+.hero-visual::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,.25));
+  pointer-events:none;
+}
+.hero-caption{
+  position:absolute;bottom:28px;left:28px;z-index:2;color:#fff;
+  font-family:var(--font-serif);font-size:1.1rem;font-style:italic;
+}
+.hero-caption small{
+  display:block;font-family:var(--font-mono);font-size:.7rem;
+  text-transform:uppercase;letter-spacing:.2em;opacity:.7;font-style:normal;
+  margin-top:4px;
+}
+
+.hero-stats{
+  display:flex;gap:48px;margin-top:56px;padding-top:32px;
+  border-top:1px solid var(--border);flex-wrap:wrap;
+}
+.hero-stat .num{
+  font-family:var(--font-serif);font-size:2.4rem;font-weight:600;
+  line-height:1;color:var(--text);margin-bottom:6px;
+}
+.hero-stat .lbl{
+  font-size:.82rem;color:var(--text-muted);
+  font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em;
+}
+
+/* ============================================
+   6. MARQUEE
+============================================ */
+.marquee-section{
+  padding:44px 0;border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);overflow:hidden;
+}
+.marquee{
+  overflow:hidden;white-space:nowrap;
+  mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+}
+.marquee-inner{display:inline-flex;animation:marquee 40s linear infinite;align-items:center;gap:80px;}
+.marquee-inner:hover{animation-play-state:paused;}
+.marquee-inner span{
+  font-family:var(--font-serif);font-size:1.8rem;font-weight:500;
+  color:var(--text-muted);transition:color .3s;font-style:italic;
+}
+.marquee-inner span::after{
+  content:'◆';font-size:.6rem;margin-left:80px;color:var(--gold);
+  vertical-align:middle;font-style:normal;
+}
+.marquee-inner span:hover{color:var(--gold);}
+@keyframes marquee{to{transform:translateX(-50%);}}
+
+/* ============================================
+   7. ABOUT
+============================================ */
+.about-img-wrap{
+  position:relative;border-radius:var(--r-lg);overflow:hidden;
+  box-shadow:var(--shadow-hover);
+}
+.about-img-wrap img{
+  width:100%;height:640px;object-fit:cover;
+  transition:transform 1.2s cubic-bezier(.19,1,.22,1);
+}
+.about-img-wrap:hover img{transform:scale(1.05);}
+.about-img-wrap::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,.35));
+}
+.about-img-label{
+  position:absolute;bottom:32px;left:32px;right:32px;z-index:2;color:#fff;
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.about-img-label .year{
+  font-family:var(--font-serif);font-size:3rem;font-weight:600;line-height:1;font-style:italic;
+}
+.about-img-label .text{
+  font-family:var(--font-mono);font-size:.72rem;text-transform:uppercase;
+  letter-spacing:.2em;opacity:.85;text-align:right;
+}
+.about-points{margin:36px 0;}
+.about-point{
+  display:grid;grid-template-columns:40px 1fr;gap:20px;
+  padding:22px 0;border-bottom:1px solid var(--border);
+}
+.about-point:last-child{border-bottom:none;}
+.about-point .num{
+  font-family:var(--font-mono);font-size:.8rem;color:var(--gold);font-weight:500;
+  padding-top:4px;
+}
+.about-point h5{
+  font-family:var(--font-sans);font-size:1.05rem;font-weight:600;margin-bottom:6px;
+}
+.about-point p{color:var(--text-soft);font-size:.94rem;line-height:1.65;}
+
+/* ============================================
+   8. SERVICES
+============================================ */
+.service-item{
+  padding:36px 0;border-top:1px solid var(--border);
+  display:grid;grid-template-columns:auto 1fr auto;gap:32px;
+  align-items:center;transition:padding .4s,background .4s;
+  cursor:pointer;position:relative;
+}
+.service-item:last-child{border-bottom:1px solid var(--border);}
+.service-item::before{
+  content:'';position:absolute;inset:0;left:-40px;right:-40px;
+  background:var(--accent-soft);opacity:0;transition:opacity .4s;z-index:-1;
+  border-radius:var(--r);
+}
+.service-item:hover{padding-left:24px;padding-right:24px;}
+.service-item:hover::before{opacity:1;}
+.service-item .idx{
+  font-family:var(--font-mono);font-size:.8rem;color:var(--text-muted);
+  letter-spacing:.15em;
+}
+.service-item h3{
+  font-size:clamp(1.6rem,3vw,2.4rem);font-weight:500;transition:color .3s;
+}
+.service-item:hover h3{color:var(--gold);}
+.service-item .arrow{
+  width:52px;height:52px;border-radius:50%;
+  border:1px solid var(--border-strong);display:flex;
+  align-items:center;justify-content:center;font-size:1.2rem;
+  transition:all .4s;color:var(--text);
+}
+.service-item:hover .arrow{
+  background:var(--gold);color:#fff;border-color:var(--gold);
+  transform:rotate(-45deg);
+}
+
+/* ============================================
+   9. PORTFOLIO
+============================================ */
+.portfolio-filter{
+  display:flex;gap:8px;margin-bottom:44px;flex-wrap:wrap;
+}
+.filter-btn{
+  background:transparent;border:1px solid var(--border-strong);
+  color:var(--text-soft);padding:10px 22px;border-radius:50px;
+  font-weight:500;font-size:.85rem;cursor:pointer;transition:all .3s;
+}
+.filter-btn:hover{border-color:var(--gold);color:var(--gold);}
+.filter-btn.active{background:var(--text);color:var(--bg);border-color:var(--text);}
+
+.portfolio-grid{
+  display:grid;grid-template-columns:repeat(12,1fr);gap:32px;
+}
+.portfolio-item{
+  position:relative;border-radius:var(--r-lg);overflow:hidden;
+  cursor:pointer;box-shadow:var(--shadow);
+  transition:all .5s cubic-bezier(.19,1,.22,1);
+}
+.portfolio-item:nth-child(1){grid-column:span 7;}
+.portfolio-item:nth-child(2){grid-column:span 5;}
+.portfolio-item:nth-child(3){grid-column:span 12;}
+.portfolio-item img{
+  width:100%;height:440px;object-fit:cover;
+  transition:transform 1s cubic-bezier(.19,1,.22,1);
+}
+.portfolio-item:nth-child(3) img{height:520px;}
+.portfolio-item:hover{transform:translateY(-6px);box-shadow:var(--shadow-hover);}
+.portfolio-item:hover img{transform:scale(1.06);}
+.portfolio-item::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.75));
+  transition:opacity .4s;
+}
+.portfolio-content{
+  position:absolute;bottom:0;left:0;right:0;padding:36px;z-index:2;color:#fff;
+  display:flex;justify-content:space-between;align-items:flex-end;gap:20px;
+}
+.portfolio-tag{
+  display:inline-block;padding:6px 14px;border-radius:50px;
+  background:rgba(255,255,255,.15);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.25);
+  font-family:var(--font-mono);font-size:.7rem;text-transform:uppercase;
+  letter-spacing:.15em;margin-bottom:14px;
+}
+.portfolio-content h4{
+  font-size:clamp(1.4rem,2.5vw,2rem);font-weight:500;color:#fff;
+  line-height:1.15;
+}
+.portfolio-content .arrow{
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(255,255,255,.15);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;color:#fff;transition:all .4s;flex-shrink:0;
+}
+.portfolio-item:hover .arrow{background:var(--gold);border-color:var(--gold);transform:rotate(-45deg);}
+.portfolio-hidden{display:none!important;}
+
+/* ============================================
+   10. TESTIMONIALS
+============================================ */
+.testimonial-wrap{
+  background:var(--bg-elev);border-radius:var(--r-lg);
+  padding:80px 60px;position:relative;overflow:hidden;
+  box-shadow:var(--shadow);border:1px solid var(--border);
+}
+.testimonial-wrap::before{
+  content:'"';position:absolute;top:-40px;left:40px;
+  font-family:var(--font-serif);font-size:20rem;line-height:1;
+  color:var(--gold);opacity:.08;
+}
+.testimonial-quote{
+  font-family:var(--font-serif);font-size:clamp(1.4rem,2.6vw,2rem);
+  font-weight:500;line-height:1.45;letter-spacing:-.015em;
+  margin-bottom:44px;position:relative;z-index:1;
+}
+.testimonial-author{
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  padding-top:32px;border-top:1px solid var(--border);
+}
+.testimonial-author .avatar{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--grad);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-serif);font-size:1.4rem;font-weight:600;
+  flex-shrink:0;
+}
+.testimonial-author .name{font-weight:600;font-size:1rem;}
+.testimonial-author .role{font-size:.85rem;color:var(--text-muted);}
+.testimonial-stars{margin-left:auto;color:var(--gold);font-size:.9rem;}
+
+/* ============================================
+   11. FAQ
+============================================ */
+.faq-list{border-top:1px solid var(--border);}
+.faq-item{border-bottom:1px solid var(--border);}
+.faq-btn{
+  width:100%;background:none;border:none;text-align:left;
+  padding:32px 0;font-family:var(--font-serif);font-size:clamp(1.15rem,2vw,1.4rem);
+  font-weight:500;color:var(--text);cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;gap:24px;
+  transition:color .3s;
+}
+.faq-btn:hover{color:var(--gold);}
+.faq-btn .icon{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--border-strong);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .4s;
+}
+.faq-btn .icon i{font-size:.9rem;color:var(--text);transition:transform .4s;}
+.faq-item.open .faq-btn .icon{background:var(--gold);border-color:var(--gold);}
+.faq-item.open .faq-btn .icon i{color:#fff;transform:rotate(45deg);}
+.faq-body{
+  max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.19,1,.22,1);
+}
+.faq-body-inner{
+  padding:0 0 32px;color:var(--text-soft);font-size:1rem;line-height:1.75;
+  max-width:85%;
+}
+
+/* ============================================
+   12. CTA
+============================================ */
+.cta-section{position:relative;padding:130px 0;overflow:hidden;}
+.cta-bg{position:absolute;inset:0;background:var(--bg-dark);z-index:0;}
+.cta-bg::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 50%,rgba(184,137,74,.25),transparent 60%);
+}
+.cta-content{position:relative;z-index:1;text-align:center;color:#fff;}
+.cta-title{
+  font-family:var(--font-serif);font-size:clamp(2.4rem,6vw,5rem);
+  font-weight:500;line-height:1.05;letter-spacing:-.03em;margin-bottom:28px;
+  color:#fff;
+}
+.cta-title .italic{font-style:italic;color:var(--gold-light);}
+.cta-desc{
+  font-size:1.1rem;color:rgba(255,255,255,.7);
+  max-width:520px;margin:0 auto 44px;line-height:1.7;
+}
+.cta-section .btn-gold{background:var(--gold-light);color:#151310;}
+.cta-section .btn-ghost{color:#fff;border-color:rgba(255,255,255,.3);}
+.cta-section .btn-ghost:hover{background:#fff;color:#151310;border-color:#fff;}
+
+/* ============================================
+   13. FOOTER
+============================================ */
+.footer{
+  background:var(--bg-dark);color:rgba(255,255,255,.75);
+  padding:80px 0 32px;position:relative;
+}
+.footer .navbar-brand{color:#fff!important;}
+.footer h6{
+  font-family:var(--font-mono);font-weight:500;font-size:.72rem;
+  text-transform:uppercase;letter-spacing:.2em;
+  color:var(--gold-light);margin-bottom:22px;
+}
+.footer-links{list-style:none;padding:0;}
+.footer-links li{margin-bottom:14px;}
+.footer-links a{color:rgba(255,255,255,.7);font-size:.92rem;transition:color .25s;}
+.footer-links a:hover{color:var(--gold-light);}
+.footer-big-text{
+  font-family:var(--font-serif);font-size:clamp(3rem,10vw,9rem);
+  font-weight:500;line-height:1;letter-spacing:-.04em;
+  color:rgba(255,255,255,.06);margin:60px 0 40px;
+  text-align:center;font-style:italic;
+}
+.footer-social{
+  width:44px;height:44px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.2);
+  display:inline-flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.7);transition:all .3s;margin-right:8px;
+}
+.footer-social:hover{background:var(--gold);color:#151310;border-color:var(--gold);transform:translateY(-3px);}
+.footer-bottom{
+  padding-top:32px;margin-top:32px;
+  border-top:1px solid rgba(255,255,255,.1);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;
+  font-family:var(--font-mono);font-size:.78rem;
+  color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.1em;
+}
+
+/* ============================================
+   14. RESPONSIVE
+============================================ */
+@media (max-width:1199.98px){
+  .hero-visual img{height:520px;}
+  .about-img-wrap img{height:520px;}
+}
+@media (max-width:991.98px){
+  .hero{padding:140px 0 60px;min-height:auto;}
+  .hero-visual{margin-top:60px;}
+  .hero-visual img{height:440px;}
+  .hero-stats{gap:32px;}
+  .section{padding:90px 0;}
+  .section-sm{padding:60px 0;}
+  .about-img-wrap img{height:440px;}
+  .testimonial-wrap{padding:60px 32px;}
+  .portfolio-grid{grid-template-columns:repeat(6,1fr);gap:24px;}
+  .portfolio-item:nth-child(1),
+  .portfolio-item:nth-child(2),
+  .portfolio-item:nth-child(3){grid-column:span 6;}
+  .portfolio-item img{height:360px!important;}
+  
+  .navbar-collapse{
+    background:var(--bg-elev);border:1px solid var(--border);
+    border-radius:var(--r);padding:20px 18px;margin-top:16px;
+    box-shadow:var(--shadow);
+  }
+  .navbar-nav .nav-link{padding:12px 14px;border-radius:8px;margin:2px 0;}
+  .navbar-nav .nav-link:hover{background:var(--accent-soft);}
+  .navbar-nav .nav-link::after{display:none;}
+}
+@media (max-width:767.98px){
+  .hero-title{font-size:2.6rem;}
+  .section-title{font-size:2rem;}
+  .hero-stats{gap:24px;}
+  .hero-stat .num{font-size:1.8rem;}
+  .hero-visual img{height:360px;}
+  .about-img-wrap img{height:360px;}
+  .portfolio-item img{height:280px!important;}
+  .testimonial-wrap{padding:44px 24px;}
+  .faq-body-inner{max-width:100%;}
+  .cta-title{font-size:2.2rem;}
+  .footer-big-text{font-size:3.5rem;margin:40px 0 24px;}
+}
+@media (max-width:575.98px){
+  .hero{padding:120px 0 40px;}
+  .hero-title{font-size:2.1rem;}
+  .hero-desc{font-size:1rem;}
+  .section{padding:70px 0;}
+  .section-title{font-size:1.85rem;}
+  .service-item{grid-template-columns:auto 1fr;gap:16px;padding:26px 0;}
+  .service-item .arrow{display:none;}
+  .service-item:hover{padding-left:12px;padding-right:12px;}
+  .hero-actions{gap:10px;}
+  .hero-actions .btn-gold,.hero-actions .btn-ghost{padding:12px 24px;font-size:.85rem;}
+  .hero-stats{flex-direction:row;justify-content:space-between;}
+  .hero-stat .num{font-size:1.5rem;}
+  .hero-stat .lbl{font-size:.68rem;}
+  .testimonial-wrap{padding:36px 20px;}
+  .testimonial-quote{font-size:1.25rem;}
+  .testimonial-stars{margin-left:0;width:100%;}
+  .portfolio-item img{height:240px!important;}
+  .footer-big-text{font-size:2.6rem;}
+}
+</style>
+</head>
+<body class="no-js">
+
+<script>
+  // Remove no-js class as soon as possible
+  document.body.classList.remove('no-js');
+  // Add a fallback just in case scripts fail to run for reveal animations
+  setTimeout(function(){
+    document.querySelectorAll('.reveal').forEach(function(el){
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    });
+  }, 500);
+</script>
+
+<!-- Custom Cursor -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Scroll Progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ============ NAVBAR ============ -->
+<nav class="nav-wrap" id="navbar">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg p-0">
+      <a class="navbar-brand" href="#home">Nex<span class="brand-dot">.</span>Gen</a>
+
+      <div class="d-flex align-items-center gap-2 order-lg-3">
+        <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">
+          <i class="bi bi-moon-stars"></i>
+        </button>
+        <button class="navbar-toggler d-lg-none" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navMenu">
+          <i class="bi bi-list"></i>
+        </button>
+      </div>
+
+      <div class="collapse navbar-collapse order-lg-2" id="navMenu">
+        <ul class="navbar-nav mx-auto mb-3 mb-lg-0">
+          <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="#work">Work</a></li>
+          <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+        </ul>
+        <a href="#contact" class="btn-dark d-none d-lg-inline-flex">
+          Let's Talk <i class="bi bi-arrow-up-right"></i>
+        </a>
+        <a href="#contact" class="btn-gold w-100 mt-2 d-lg-none justify-content-center">
+          <span>Let's Talk</span> <i class="bi bi-arrow-up-right"></i>
+        </a>
+      </div>
+    </nav>
+  </div>
+</nav>
+
+<!-- ============ 1. HERO ============ -->
+<section class="hero" id="home">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="hero-meta reveal">
+          <span class="dot"></span>
+          <span>Digital Studio · Est. 2020</span>
+          <span class="line"></span>
+        </div>
+
+        <h1 class="hero-title reveal">
+          We craft <span class="italic">quiet</span><br>
+          luxury in <span class="underline">digital</span>.
+        </h1>
+
+        <p class="hero-desc reveal">
+          NexGen is a boutique studio partnering with ambitious brands to design and build websites, products and identities that feel effortless — and convert.
+        </p>
+
+        <div class="hero-actions reveal">
+          <a href="#contact" class="btn-gold">
+            <span>Start a Project</span>
+            <i class="bi bi-arrow-right"></i>
+          </a>
+          <a href="#work" class="btn-ghost">
+            View Work <i class="bi bi-arrow-down-right"></i>
+          </a>
+        </div>
+
+        <div class="hero-stats reveal">
+          <div class="hero-stat">
+            <div class="num">250+</div>
+            <div class="lbl">Projects shipped</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num">99%</div>
+            <div class="lbl">Client retention</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num">5+</div>
+            <div class="lbl">Years crafting</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="hero-visual reveal" id="heroVisual">
+          <!-- Working High-Quality Dummy Image -->
+          <img src="/img/room1.jfif" alt="NexGen studio space">
+          <div class="hero-caption">
+            Our studio · Mansehra
+            <small>Est. 2020</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. MARQUEE ============ -->
+<section class="marquee-section">
+  <div class="marquee">
+    <div class="marquee-inner">
+      <span>Brand Strategy</span>
+      <span>Web Design</span>
+      <span>Development</span>
+      <span>Mobile Apps</span>
+      <span>Motion Design</span>
+      <span>Art Direction</span>
+      <span>Brand Strategy</span>
+      <span>Web Design</span>
+      <span>Development</span>
+      <span>Mobile Apps</span>
+      <span>Motion Design</span>
+      <span>Art Direction</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. ABOUT ============ -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-6">
+        <div class="about-img-wrap reveal">
+          <!-- Working High-Quality Dummy Image -->
+          <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1200&auto=format&fit=crop" alt="Team at work">
+          <div class="about-img-label">
+            <div class="year">'20</div>
+            <div class="text">Founded<br>in Pakistan</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="reveal">
+          <span class="eyebrow">Who we are</span>
+          <h2 class="section-title">
+            A studio built on <span class="italic">craft, care</span> & clarity.
+          </h2>
+          <p class="section-desc mb-4">
+            We're a small senior team of designers and engineers. No middle layer, no junior handoffs — just the people who'll actually build your product, working directly with you.
+          </p>
+
+          <div class="about-points">
+            <div class="about-point">
+              <div class="num">01</div>
+              <div>
+                <h5>Senior-only team</h5>
+                <p>Every project is handled by people with 5+ years of craft — no exceptions.</p>
+              </div>
+            </div>
+            <div class="about-point">
+              <div class="num">02</div>
+              <div>
+                <h5>Ship fast, ship right</h5>
+                <p>Weekly demos, transparent timelines, and zero surprises from kickoff to launch.</p>
+              </div>
+            </div>
+            <div class="about-point">
+              <div class="num">03</div>
+              <div>
+                <h5>Partnership, not handoff</h5>
+                <p>Free 30-day support and lifetime bug fixes on every project we ship.</p>
+              </div>
+            </div>
+          </div>
+
+          <a href="#services" class="btn-dark">
+            Explore Services <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. SERVICES ============ -->
+<section class="section" id="services" style="padding-top:40px;">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-lg-6 reveal">
+        <span class="eyebrow">What we do</span>
+        <h2 class="section-title">Services that <span class="italic">move the needle</span>.</h2>
+      </div>
+      <div class="col-lg-6 reveal d-flex align-items-end">
+        <p class="section-desc ms-lg-auto">
+          From first sketch to final deployment — we handle every layer of your digital product with obsessive care.
+        </p>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="service-item">
+        <span class="idx">01</span>
+        <h3>Web Design & Development</h3>
+        <div class="arrow"><i class="bi bi-arrow-right"></i></div>
+      </div>
+      <div class="service-item">
+        <span class="idx">02</span>
+        <h3>Mobile Apps</h3>
+        <div class="arrow"><i class="bi bi-arrow-right"></i></div>
+      </div>
+      <div class="service-item">
+        <span class="idx">03</span>
+        <h3>Brand Identity & Design Systems</h3>
+        <div class="arrow"><i class="bi bi-arrow-right"></i></div>
+      </div>
+      <div class="service-item">
+        <span class="idx">04</span>
+        <h3>SEO, Analytics & Growth</h3>
+        <div class="arrow"><i class="bi bi-arrow-right"></i></div>
+      </div>
+      <div class="service-item">
+        <span class="idx">05</span>
+        <h3>Motion & Interactive Design</h3>
+        <div class="arrow"><i class="bi bi-arrow-right"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. PORTFOLIO ============ -->
+<section class="section" id="work" style="background:var(--bg-elev);">
+  <div class="container">
+    <div class="row mb-5 align-items-end">
+      <div class="col-lg-8 reveal">
+        <span class="eyebrow">Selected work</span>
+        <h2 class="section-title">Projects we're <span class="italic">proud of</span>.</h2>
+      </div>
+      <div class="col-lg-4 reveal">
+        <div class="portfolio-filter justify-content-lg-end">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="web">Web</button>
+          <button class="filter-btn" data-filter="mobile">Mobile</button>
+          <button class="filter-btn" data-filter="brand">Brand</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="portfolio-grid" id="portfolioGrid">
+      <div class="portfolio-item reveal" data-cat="web">
+        <!-- Working Dummy Image 1 -->
+        <img src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=1400&auto=format&fit=crop" alt="Fashion store">
+        <div class="portfolio-content">
+          <div>
+            <span class="portfolio-tag">Web · E-Commerce</span>
+            <h4>Étoile — Fashion Store</h4>
+          </div>
+          <div class="arrow"><i class="bi bi-arrow-up-right"></i></div>
+        </div>
+      </div>
+
+      <div class="portfolio-item reveal" data-cat="mobile">
+        <!-- Working Dummy Image 2 -->
+        <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=1400&auto=format&fit=crop" alt="Mobile app">
+        <div class="portfolio-content">
+          <div>
+            <span class="portfolio-tag">Mobile · iOS</span>
+            <h4>Wander — Travel App</h4>
+          </div>
+          <div class="arrow"><i class="bi bi-arrow-up-right"></i></div>
+        </div>
+      </div>
+
+      <div class="portfolio-item reveal" data-cat="brand">
+        <!-- Working Dummy Image 3 -->
+        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1600&auto=format&fit=crop" alt="Brand identity">
+        <div class="portfolio-content">
+          <div>
+            <span class="portfolio-tag">Brand · Identity System</span>
+            <h4>Nova — Full Rebrand for a Creative SaaS</h4>
+          </div>
+          <div class="arrow"><i class="bi bi-arrow-up-right"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. TESTIMONIAL ============ -->
+<section class="section">
+  <div class="container">
+    <div class="testimonial-wrap reveal">
+      <div class="testimonial-quote">
+        "Working with NexGen felt like having a co-founder, not a vendor. They shipped our entire platform in 8 weeks — sharp thinking, beautiful craft, and zero drama. Our signups tripled in the first month."
+      </div>
+      <div class="testimonial-author">
+        <div class="avatar">SC</div>
+        <div>
+          <div class="name">Sarah Chen</div>
+          <div class="role">Founder & CEO · Lumina</div>
+        </div>
+        <div class="testimonial-stars">
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-fill"></i>
+          <i class="bi bi-star-fill"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. FAQ ============ -->
+<section class="section" id="faq" style="padding-top:40px;">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-4 reveal">
+        <span class="eyebrow">FAQ</span>
+        <h2 class="section-title">Questions? <span class="italic">Answered.</span></h2>
+        <p class="section-desc">
+          Everything you need to know before starting a project with us. Still curious? Drop us a line — we reply within 24 hours.
+        </p>
+        <a href="#contact" class="btn-ghost mt-4">
+          Ask us anything <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+
+      <div class="col-lg-8 reveal">
+        <div class="faq-list">
+          <div class="faq-item open">
+            <button class="faq-btn">
+              How long does a typical project take?
+              <span class="icon"><i class="bi bi-plus-lg"></i></span>
+            </button>
+            <div class="faq-body">
+              <div class="faq-body-inner">
+                Landing pages take 1–2 weeks. Full websites: 3–6 weeks. Complex web apps: 8–12 weeks. We share a detailed timeline after the discovery call.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-btn">
+              Do you offer ongoing support after launch?
+              <span class="icon"><i class="bi bi-plus-lg"></i></span>
+            </button>
+            <div class="faq-body">
+              <div class="faq-body-inner">
+                Yes — every project includes 30 days of free support. After that, we offer monthly care plans covering updates, monitoring and small improvements.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-btn">
+              Will my website be mobile-friendly and SEO-ready?
+              <span class="icon"><i class="bi bi-plus-lg"></i></span>
+            </button>
+            <div class="faq-body">
+              <div class="faq-body-inner">
+                Absolutely. Every build is mobile-first, responsive on all devices, and ships with proper meta tags, sitemaps and Lighthouse scores of 90+.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-btn">
+              Do you use templates or build custom?
+              <span class="icon"><i class="bi bi-plus-lg"></i></span>
+            </button>
+            <div class="faq-body">
+              <div class="faq-body-inner">
+                We build 100% custom. No templates, no cookie-cutter themes. Every design is tailored to your brand and users.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-btn">
+              How do payments work?
+              <span class="icon"><i class="bi bi-plus-lg"></i></span>
+            </button>
+            <div class="faq-body">
+              <div class="faq-body-inner">
+                Typically 40% upfront, 30% at design approval, and 30% on launch. We accept bank transfer, card and Wise.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. CTA ============ -->
+<section class="cta-section" id="contact">
+  <div class="cta-bg"></div>
+  <div class="container cta-content reveal">
+    <span class="eyebrow" style="color:var(--gold-light);">Let's build</span>
+    <h2 class="cta-title">
+      Ready to make<br>
+      something <span class="italic">remarkable</span>?
+    </h2>
+    <p class="cta-desc">
+      Tell us about your project. We'll reply within 24 hours with ideas, timeline and a clear quote.
+    </p>
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <a href="mailto:hello@nexgen.studio" class="btn-gold">
+        <span>Start a Project</span> <i class="bi bi-arrow-right"></i>
+      </a>
+      <a href="#" class="btn-ghost">
+        <i class="bi bi-calendar-check"></i> Book a call
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <a class="navbar-brand d-inline-block mb-3" href="#home">Nex<span class="brand-dot">.</span>Gen</a>
+        <p style="max-width:360px;font-size:.94rem;line-height:1.7;">
+          A boutique digital studio crafting brands, websites and apps that feel effortless — and convert.
+        </p>
+        <div class="mt-4">
+          <a href="#" class="footer-social"><i class="bi bi-github"></i></a>
+          <a href="#" class="footer-social"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="footer-social"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" class="footer-social"><i class="bi bi-dribbble"></i></a>
+        </div>
+      </div>
+
+      <div class="col-6 col-lg-2">
+        <h6>Company</h6>
+        <ul class="footer-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#work">Work</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="col-6 col-lg-2">
+        <h6>Services</h6>
+        <ul class="footer-links">
+          <li><a href="#services">Web Design</a></li>
+          <li><a href="#services">Mobile Apps</a></li>
+          <li><a href="#services">Branding</a></li>
+          <li><a href="#services">SEO</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-3">
+        <h6>Get in touch</h6>
+        <ul class="footer-links">
+          <li><a href="mailto:hello@nexgen.studio">hello@nexgen.studio</a></li>
+          <li><a href="tel:+923001234567">+92 300 1234567</a></li>
+          <li>Mansehra, Pakistan</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-big-text">NexGen Studio</div>
+
+    <div class="footer-bottom">
+      <div>© <span id="year"></span> NexGen Studio. All rights reserved.</div>
+      <div>Made with care in Pakistan</div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* ============================================
+   1. THEME TOGGLE
+============================================ */
+const html = document.documentElement;
+const themeBtn = document.getElementById('themeBtn');
+const themeIcon = themeBtn.querySelector('i');
+
+const saved = localStorage.getItem('nexgen-theme') || 'light';
+html.setAttribute('data-theme', saved);
+updateIcon(saved);
+
+themeBtn.addEventListener('click', () => {
+  const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('nexgen-theme', next);
+  updateIcon(next);
+});
+function updateIcon(t){ themeIcon.className = t === 'dark' ? 'bi bi-sun' : 'bi bi-moon-stars'; }
+
+/* ============================================
+   2. CUSTOM CURSOR
+============================================ */
+const dot = document.getElementById('cursorDot');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left = mx + 'px';
+  dot.style.top = my + 'px';
+});
+
+function animateRing(){
+  rx += (mx - rx) * 0.15;
+  ry += (my - ry) * 0.15;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('a, button, .service-item, .portfolio-item, .faq-btn').forEach(el => {
+  el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+  el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+});
+
+/* ============================================
+   3. SCROLL PROGRESS + NAVBAR + ACTIVE LINK
+============================================ */
+const navbar = document.getElementById('navbar');
+const progress = document.getElementById('scrollProgress');
+const navLinks = document.querySelectorAll('.nav-link');
+const sections = document.querySelectorAll('section[id]');
+
+function onScroll(){
+  const y = window.scrollY;
+  navbar.classList.toggle('scrolled', y > 30);
+  const dh = document.documentElement.scrollHeight - window.innerHeight;
+  progress.style.width = (y / dh) * 100 + '%';
+
+  let cur = '';
+  sections.forEach(s => { if (y >= s.offsetTop - 140) cur = s.id; });
+  navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + cur));
+}
+window.addEventListener('scroll', onScroll);
+onScroll();
+
+/* ============================================
+   4. SCROLL REVEAL (TRIGGER ON INTERSECTION)
+============================================ */
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      revObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.05 }); 
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+/* ============================================
+   5. PORTFOLIO FILTER
+============================================ */
+const fbtns = document.querySelectorAll('.filter-btn');
+const projects = document.querySelectorAll('.portfolio-item');
+
+fbtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    fbtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+
+    projects.forEach(p => {
+      const match = f === 'all' || p.dataset.cat === f;
+      p.style.transition = 'opacity .4s, transform .4s';
+      if (match) {
+        p.classList.remove('portfolio-hidden');
+        setTimeout(() => { p.style.opacity = '1'; p.style.transform = 'scale(1)'; }, 20);
+      } else {
+        p.style.opacity = '0';
+        p.style.transform = 'scale(.96)';
+        setTimeout(() => p.classList.add('portfolio-hidden'), 300);
+      }
+    });
+  });
+});
+
+/* ============================================
+   6. FAQ ACCORDION
+============================================ */
+document.querySelectorAll('.faq-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    const body = item.querySelector('.faq-body');
+    const isOpen = item.classList.contains('open');
+
+    document.querySelectorAll('.faq-item').forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.faq-body').style.maxHeight = null;
+    });
+
+    if (!isOpen) {
+      item.classList.add('open');
+      body.style.maxHeight = body.scrollHeight + 'px';
+    }
+  });
+});
+
+window.addEventListener('load', () => {
+  const first = document.querySelector('.faq-item.open .faq-body');
+  if (first) first.style.maxHeight = first.scrollHeight + 'px';
+});
+
+/* ============================================
+   7. DYNAMIC YEAR
+============================================ */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ============================================
+   8. SMOOTH ANCHOR + MOBILE NAV CLOSE
+============================================ */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (id.length > 1 && document.querySelector(id)) {
+      e.preventDefault();
+      document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+      const nav = document.getElementById('navMenu');
+      if (nav.classList.contains('show')) {
+        new bootstrap.Collapse(nav).hide();
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>
